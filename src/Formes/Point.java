@@ -14,9 +14,14 @@ public class Point {
      * @param y float représentant la coordonnée y du point
      */
 
-    public Point(float x, float y){
+    Point(float x, float y){
         this.x = x;
         this.y = y;
+    }
+
+    Point(){
+        this.x = 0;
+        this.y = 0;
     }
 
     /**
@@ -39,6 +44,9 @@ public class Point {
     public float distanceEuclidienne(Point b){
         return (float) Math.sqrt(Math.pow(b.getX()-this.getX(),2)+Math.pow(b.getY()-this.getY(),2));
     }
+
+    @Override
+    public String toString(){ return "x: " + this.getX() + "| y: " + this.getY(); }
 
     public static void main(String[] args){
         Point a = new Point(0,3);
