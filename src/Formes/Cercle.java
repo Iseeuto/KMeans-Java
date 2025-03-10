@@ -13,6 +13,9 @@ public class Cercle extends Forme {
      */
     public float getRayon(){ return this.rayon; }
 
+    @Override
+    public String toString() { return super.toString() + ", Rayon (" + this.rayon + ")"; }
+
     Cercle(Point centre, float rayon){
         super(centre);
         this.rayon = rayon;
@@ -27,8 +30,8 @@ public class Cercle extends Forme {
         Cercle C1 = new Cercle(new Point(2, 3), 5);
         Cercle C2 = new Cercle();
 
-        System.out.println(C1.getCentre() + " r=" + C1.getRayon());
-        System.out.println(C2.getCentre() + " r=" + C2.getRayon());
+        System.out.println(C1);
+        System.out.println(C2);
     }
 
 }

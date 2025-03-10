@@ -1,12 +1,13 @@
 package Formes;
 
+/** Classe basique d'un point dans un espace en deux dimensions
+ */
 public class Point {
 
-    /**
-     * Classe qui représente un point en 2 dimensions
-     */
     private float x;
     private float y;
+
+    protected int groupe;
 
     /**
      * Constructeur de base à 2 paramètres
@@ -44,6 +45,9 @@ public class Point {
     public float distanceEuclidienne(Point b){
         return (float) Math.sqrt(Math.pow(b.getX()-this.getX(),2)+Math.pow(b.getY()-this.getY(),2));
     }
+
+    public int getGroupe(){ return this.groupe; }
+    public void setGroupe(int g){ this.groupe = g; }
 
     @Override
     public String toString(){ return "x: " + this.getX() + "| y: " + this.getY(); }

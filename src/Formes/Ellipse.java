@@ -19,6 +19,9 @@ public class Ellipse extends Forme{
      */
     public Point getAxeMineur() { return AxeMineur; }
 
+    @Override
+    public String toString(){ return super.toString() + ", AxeMineur (" + this.AxeMineur + "), AxeMajeur (" + this.AxeMajeur + ")"; }
+
     Ellipse(Point centre, Point majeur, Point mineur){
         super(centre);
         this.AxeMajeur = majeur;
@@ -35,8 +38,8 @@ public class Ellipse extends Forme{
         Ellipse E1 = new Ellipse(new Point(1, 4), new Point(1,5), new Point(1, 3));
         Ellipse E2 = new Ellipse();
 
-        System.out.println(E1.getCentre() + "|| Haut: " + E1.getAxeMajeur() + "|| Bas: " + E1.AxeMineur);
-        System.out.println(E2.getCentre() + "|| Haut: " + E2.getAxeMajeur() + "|| Bas: " + E2.AxeMineur);
+        System.out.println(E1);
+        System.out.println(E2);
     }
 
 }
