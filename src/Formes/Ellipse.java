@@ -19,6 +19,9 @@ public class Ellipse extends Forme{
      */
     public float getAxeMineur() { return AxeMineur; }
 
+    @Override
+    public String toString(){ return super.toString() + ", AxeMineur (" + this.AxeMineur + "), AxeMajeur (" + this.AxeMajeur + ")"; }
+
     Ellipse(Point centre, float majeur, float mineur){
         super(centre);
         this.AxeMajeur = majeur;
