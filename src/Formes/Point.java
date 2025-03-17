@@ -7,7 +7,7 @@ public class Point {
     private float x;
     private float y;
 
-    protected int groupe;
+    public int groupe;
 
     /**
      * Constructeur de base à 2 paramètres
@@ -15,14 +15,16 @@ public class Point {
      * @param y float représentant la coordonnée y du point
      */
 
-    Point(float x, float y){
+    public Point(float x, float y){
         this.x = x;
         this.y = y;
+        this.groupe = -1;
     }
 
     Point(){
         this.x = 0;
         this.y = 0;
+        this.groupe = -1;
     }
 
     /**
@@ -36,6 +38,15 @@ public class Point {
      * @return la valeur de y
      */
     public float getY(){return y;}
+
+    public void setX(float x){this.x=x;}
+
+    public void setY(float y){this.y=y;}
+
+    /**
+     * Getter du groupe
+     * @return le label du groupe
+     */
 
     /** Méthode qui renvoie la distance euclidienne entre notre point et un autre
      *
@@ -52,11 +63,32 @@ public class Point {
     @Override
     public String toString(){ return "x: " + this.getX() + "| y: " + this.getY(); }
 
+    /**
+     * Fait avec chat GPT, l'override du equals et du hashcode permet d'utiliser les méthodes contains et equals sur les HashSet<Point>
+     * et considère des points égaux si ils possèdent les mêmes coordonnées
+     */
+    @Override
+    public boolean equals(Object obj){
+        Point p = (Point) obj;
+        return p.x == this.x && p.y == this.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * Float.hashCode(x) + Float.hashCode(y);
+    }
+
     public static void main(String[] args){
         Point a = new Point(0,3);
         Point b = new Point(5,7);
+        Point c = new Point(0,3);
 
         System.out.println(a.distanceEuclidienne(b));
+        
+        System.out.println(a.equals(b));
+        System.out.println(c.equals(a));
     }
+
+
 
 }
