@@ -68,20 +68,21 @@ public class Graphe<K extends KMean<?>> extends JPanel {
             posY = (int)(Points.get(i).y / ((double)yMax/(double)(this.getHeight()-yOffset)));
 
 
-            if(i == this.indexHover){
-                g.setColor(Color.WHITE); // Point selectionné
-            } else {
-                g.setColor(Color.BLACK); // Autres
-            }
+            // Point selectionné
+            if(i == this.indexHover){ g.setColor(Color.WHITE);
+                // Autres
+            }else { g.setColor(Color.BLACK); }
             g.fillOval(posX, posY, this.taillePoint, this.taillePoint);
         }
     }
 
     Graphe(K kmean){
         this.Kmean = kmean;
+        // Pour test seulement
         for(int i=0; i<Math.random()*500; i++){
             this.Points.add(new Point((int)(Math.random()*800), (int)(Math.random()*600)));
         }
+        //
         setBackground(Color.LIGHT_GRAY);
 
         // Détecter hover d'un point

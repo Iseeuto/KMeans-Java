@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
-
-import java.util.HashSet;
-
 public class KMeanSimple extends KMean<Point>{
 
     /**
@@ -98,7 +95,7 @@ public class KMeanSimple extends KMean<Point>{
         super(2, new HashSet<Point>());
     }
 
-}
+
 
     public static void main(String[] args) {
         Point a = new Point(0,3);
@@ -134,5 +131,6 @@ public class KMeanSimple extends KMean<Point>{
             }
         }
 
-    }}
+    }
+}
 
