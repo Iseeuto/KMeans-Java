@@ -3,7 +3,7 @@ package Kmeans;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-abstract class KMean<T>{
+public abstract class KMean<T>{
     int k ;
     HashSet<T> elts;
     HashSet<T> centres;
