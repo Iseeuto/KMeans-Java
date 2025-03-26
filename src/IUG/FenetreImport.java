@@ -1,16 +1,21 @@
 package IUG;
 
+import Kmeans.KMean;
+import Kmeans.KMeanSimple;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 
 /**
  * Classe représentant une fenêtre permettant d'importer des fichiers de données.
- * Cette fenêtre permet de sélectionner un fichier (CSV, XLS, ODS) et de choisir
+ * Cette fenêtre permet de sélectionner un fichier CSV et de choisir
  * un type d'algorithme K-Means avant d'importer les données.
  */
 public class FenetreImport extends JFrame {
@@ -18,12 +23,41 @@ public class FenetreImport extends JFrame {
     /**
      * Scanner utilisé pour lire le fichier importé.
      */
-    private Scanner scanner;
+    private Scanner scanner = null;
 
     /**
      * Application parente de la fenêtre
      */
     private Application app;
+
+    private void loadFile(String type){
+        ArrayList<String> lines = new ArrayList();
+        int numline = 0;
+        while(this.scanner.hasNextLine()){ lines.add(this.scanner.nextLine()); }
+
+        String[] labels = lines.get(0).split(";");
+        HashSet<Formes.Point> points = new HashSet<>();
+        for(int i=1; i<lines.size(); i++){
+            // TODO: faire pour n dimensions
+            String[] s = lines.get(i).split(";");
+            Formes.Point p = new Formes.Point(Float.parseFloat(s[0].replace(',', '.')), Float.parseFloat(s[1].replace(',', '.')));
+            points.add(p);
+        }
+
+        Graphe<?> graph = null;
+
+        switch (type){
+            case "Simple":
+                graph = new Graphe<KMeanSimple>(new KMeanSimple(2, points));
+                break;
+            case "Elongated":
+                break;
+            case "Formes":
+                break;
+        }
+
+        app.switchGraph(graph);
+    }
 
     /**
      * Initialise et organise les composants graphiques de la fenêtre d'importation.
@@ -51,7 +85,7 @@ public class FenetreImport extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser choice = new JFileChooser();
                 FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                        "Fichiers tableur", "xls", "csv", "ods"
+                        "Fichiers tableur (.csv)", "csv"
                 );
                 choice.setFileFilter(filter);
 
@@ -76,6 +110,18 @@ public class FenetreImport extends JFrame {
 
         // Bouton d'importation des données
         JButton importer = new JButton("Importer");
+        importer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(filename.getText() != ""){
+                    parent.loadFile(String.valueOf(boite.getSelectedItem()));
+                    parent.setVisible(false);
+                }
+                else {
+                 // TODO: Throw une erreur custom avec un JDialogue
+                }
+            }
+        });
         panel.add(importer);
 
         this.add(panel);

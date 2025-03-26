@@ -11,13 +11,13 @@ import java.util.HashSet;
  *
  * @param <T> Type des éléments à regrouper (par exemple, des points dans un espace à 2 dimensions).
  */
-abstract class KMean<T> {
+public abstract class KMean<T> {
 
     // Nombre de clusters
     int k;
     
     // Ensemble d'éléments à regrouper
-    HashSet<T> elts;
+    public HashSet<T> elts;
     
     // Ensemble des centres des clusters
     HashSet<T> centres;
