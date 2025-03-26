@@ -127,6 +127,17 @@ public class Point {
     }
 
     /**
+     * Calcule la distance euclidienne entre deux points.
+     *
+     * @param a Le premier point
+     * @param b Le second point
+     * @return La distance euclidienne entre les deux points
+     */
+    static public float distanceEuclidienne(Point a,Point b){
+        return (float) Math.sqrt(Math.pow(b.getX() - a.getX(), 2) + Math.pow(b.getY() - a.getY(), 2));
+    }
+
+    /**
      * Méthode principale pour tester l'égalité de deux points.
      * 
      * @param args Les arguments de la ligne de commande (non utilisés ici).

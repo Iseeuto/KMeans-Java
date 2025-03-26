@@ -49,7 +49,7 @@ public class KMeanSimple extends KMean<Point>{
      */
     @Override
     protected float distance(Point a, Point b){
-        return (float) Math.sqrt(Math.pow(b.getX() - a.getX(), 2) + Math.pow(b.getY() - a.getY(), 2));
+        return Point.distanceEuclidienne(a, b);
     }
 
     /**
@@ -100,7 +100,7 @@ public class KMeanSimple extends KMean<Point>{
             newX = newX / taille; 
             newY = newY / taille;
             Point newCentre = new Point(newX, newY);
-            if(this.distance(centre, newCentre) >= SEUIL_CONVERGENCE){
+            if(Point.distanceEuclidienne(centre, newCentre) >= SEUIL_CONVERGENCE){
                 continuer = true;
                 centre.setX(newX);
                 centre.setY(newY);
