@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.font.FontRenderContext;
+import java.awt.font.LineMetrics;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -93,6 +95,22 @@ public class Graphe<K extends KMean<?>> extends JPanel {
         return;
     }
 
+    private void dessinerInformations(Graphics g, float xMax, float yMax){
+        int posX = (int) (this.hovered.getX() / ((double) xMax / (double) (this.getWidth() - xOffset)));
+        int posY = (int) (this.hovered.getY() / ((double) yMax / (double) (this.getHeight() - yOffset)));
+        String text = hovered.getX() + " / " + hovered.getY();
+        Font f = new Font("Arial", Font.BOLD, 12);
+        g.setFont(f);
+        FontRenderContext frc = g.getFontMetrics().getFontRenderContext();
+        int textWidth = (int)f.getStringBounds(text, frc).getWidth();
+        LineMetrics lm = f.getLineMetrics(text, frc);
+        int textHeight = (int)(lm.getAscent() + lm.getDescent());
+        g.setColor(Color.WHITE);
+        g.fillRect(posX, posY-textHeight+2, textWidth, textHeight);
+        g.setColor(Color.BLACK);
+        g.drawString(text, posX, posY);
+    }
+
     /**
      * Redéfinit la méthode {@code paintComponent} pour dessiner les points sur le graphique.
      *
@@ -105,9 +123,9 @@ public class Graphe<K extends KMean<?>> extends JPanel {
         Formes.Point[] extremes = this.getExtremes();
         float xMax = extremes[0].getX(), yMax = extremes[0].getY();
 
+        int posX;
+        int posY;
         for (Formes.Point p : Points) {
-            int posX;
-            int posY;
 
             posX = (int) (p.getX() / ((double) xMax / (double) (this.getWidth() - xOffset)));
             posY = (int) (p.getY() / ((double) yMax / (double) (this.getHeight() - yOffset)));
@@ -121,6 +139,8 @@ public class Graphe<K extends KMean<?>> extends JPanel {
 
             g.fillOval(posX, posY, this.taillePoint, this.taillePoint);
         }
+        // Déssiner les informations du point survolé à la fin
+        if(this.hovered != null){ dessinerInformations(g, xMax, yMax); }
     }
 
     /**
@@ -137,8 +157,6 @@ public class Graphe<K extends KMean<?>> extends JPanel {
 //        }
 
         this.Points = (HashSet<Formes.Point>) this.Kmean.elts;
-
-        for (Formes.Point p: Points) System.out.println(p.getX() + " " + p.getY());
 
         setBackground(Color.LIGHT_GRAY);
 
