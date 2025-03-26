@@ -22,7 +22,8 @@ public class KMeanSimple extends KMean<Point>{
     @Override
     protected void initialiserCentres(){
         int taille = this.elts.size();
-        /* Transformation en liste pour pouvoir accéder aux différents points par leur indice */
+        if(taille == 0) return;
+        /*Transformation en liste pour pouvoir accéder aux différents points par leur indice*/
         ArrayList<Point> liste = new ArrayList<>(this.elts);
         Random random = new Random();
         int indice;
@@ -148,7 +149,7 @@ public class KMeanSimple extends KMean<Point>{
      * Constructeur par défaut qui initialise k à 2 et crée un ensemble vide de points.
      */
     public KMeanSimple(){
-        super(2, new HashSet<Point>());
+        super(2, new HashSet<>());
     }
 
     /**

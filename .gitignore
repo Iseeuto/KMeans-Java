@@ -27,3 +27,9 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+.idea/material_theme_project_new.xml
+.idea/misc.xml
+.idea/uiDesigner.xml
+.idea/modules.xml
+.idea/vcs.xml
+KMeans-Java.iml
