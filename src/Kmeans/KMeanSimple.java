@@ -208,5 +208,20 @@ public class KMeanSimple extends KMean<Point>{
                 System.out.println(p);
             }
         }
+
+        //Test pour vérifier qu'une exception est bien levé quand k est supérieur au nombre de points
+        try {
+            HashSet<Point> points = new HashSet<>();
+            points.add(new Point(1, 2));
+            points.add(new Point(2, 3));
+            points.add(new Point(3, 3));
+
+            // Test avec k supérieur au nombre de points (ici, k = 5 alors qu'il n'y a que 3 points)
+            int k = 5;
+            KMeanSimple kmeans = new KMeanSimple(k, points);
+
+        } catch (IllegalArgumentException exp) {
+            System.out.println("\nException attrapée : " + exp.getMessage());
+        }
     }
 }

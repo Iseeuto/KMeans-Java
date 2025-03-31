@@ -69,6 +69,22 @@ public abstract class KMean<T> {
      */
     protected abstract boolean calculer();
 
+    /*Méthode permettant de renvoyé si les elements sont identiques
+    *
+    */
+    private boolean elementsIdentiques(){
+    //     if(elts.size() == 0){
+    //         return true;
+    //     }
+
+    //     Iterator<T> it = elts.iterator();
+    //     T cur = it.next();
+    //     while(it.hasNext()){
+    //         if(!cur )
+    //     }
+    return false;
+    }
+
     /**
      * Constructeur principal de la classe KMean.
      * 
@@ -76,9 +92,16 @@ public abstract class KMean<T> {
      * @param elements L'ensemble des éléments à regrouper.
      */
     KMean(int k, HashSet<T> elements) {
-        /* TO DO : empêcher que k soit supérieur au nombre de points */
+        //Scénario 1 : le nombre k est supérieur au nombre de point
+        if (k > elements.size()) {
+            throw new IllegalArgumentException("Le nombre de clusters k ne peut pas être supérieur au nombre de points.");
+        }
         this.k = k;
         this.elts = elements;
+        //Scénario 2 : Tous les points sont identiques
+        if(elementsIdentiques()){
+            throw new IllegalArgumentException("Les points doivent être différents pour pouvoir effectuer le k-mean");
+        }
         this.centres = new HashSet<>();
         groupes = new ArrayList<>(k);
         for (int i = 0; i < this.k; i++) {
@@ -101,4 +124,6 @@ public abstract class KMean<T> {
         }
         initialiserCentres();
     }
+
+
 }
