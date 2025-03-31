@@ -33,7 +33,8 @@ public class KMeanSimple extends KMean<Point>{
             if (!this.centres.contains(liste.get(indice))){
                 Point p = liste.get(indice);
                 Point centre = new Point(p.getX(), p.getY());
-                centre.setGroupe(compteur);
+                Groupe g = new Groupe();
+                centre.setGroupe(g);
                 this.centres.add(centre);
                 compteur += 1;
             }
@@ -60,13 +61,13 @@ public class KMeanSimple extends KMean<Point>{
     protected void MAJGroupes(){
         // Vidage des groupes avant de pouvoir les remplir
         for (int i = 0; i < k; i++) {
-            groupes.get(i).clear();
+            groupes.get(i).points.clear();
         }
 
         // Pour chaque point, on recherche le centre le plus proche et on l'ajoute dans le groupe correspondant
         for(Point p: elts){
             float min = Float.POSITIVE_INFINITY;
-            int meilleurGroupe = -1;
+            Groupe meilleurGroupe = null;
             for (Point centre : centres) {
                 float distance = this.distance(p, centre);
                 if (distance < min){
@@ -74,7 +75,7 @@ public class KMeanSimple extends KMean<Point>{
                     meilleurGroupe = centre.groupe;
                 }
             }
-            this.groupes.get(meilleurGroupe).add(p);
+            meilleurGroupe.points.add(p);
         }
     }
 
@@ -88,8 +89,7 @@ public class KMeanSimple extends KMean<Point>{
     protected boolean MAJCentres(){
         boolean continuer = false;
         for (Point centre : centres) {
-            int indice = centre.groupe;
-            HashSet<Point> liste = groupes.get(indice);
+            HashSet<Point> liste = centre.groupe.points;
             float taille = liste.size();
             float newX = 0;
             float newY = 0;
@@ -123,16 +123,12 @@ public class KMeanSimple extends KMean<Point>{
     /**
      * Calcule une itération de l'algorithme K-means en mettant à jour les groupes et les centres.
      *
-     * @param continuer Un booléen qui indique si l'algorithme doit continuer (si les centres n'ont pas convergé).
      * @return true si les centres doivent encore être mis à jour, false si l'algorithme a convergé
      */
     @Override
-    protected boolean calculer(boolean continuer){ 
-        if (continuer) {
-            MAJGroupes();
-            continuer = MAJCentres();
-        }
-        return continuer;
+    public boolean calculer(){
+        MAJGroupes();
+        return MAJCentres();
     }
 
     /**
@@ -188,7 +184,7 @@ public class KMeanSimple extends KMean<Point>{
         test.MAJGroupes();
 
         for(int i = 0; i < test.k; i++){
-            HashSet<Point> liste = test.groupes.get(i);
+            HashSet<Point> liste = test.groupes.get(i).points;
             System.out.printf("Groupe %d%n", i);
             for (Point p: liste){
                 System.out.println(p);
@@ -205,7 +201,7 @@ public class KMeanSimple extends KMean<Point>{
         System.err.println("");
 
         for(int i = 0; i < test1.k; i++){
-            HashSet<Point> liste = test1.groupes.get(i);
+            HashSet<Point> liste = test1.groupes.get(i).points;
             System.out.printf("Groupe %d%n", i);
             for (Point p: liste){
                 System.out.println(p);

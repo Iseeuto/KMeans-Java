@@ -2,6 +2,7 @@ package IUG;
 
 import Kmeans.KMean;
 import Kmeans.KMeanSimple;
+import Kmeans.KmeanElongated;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -45,12 +46,12 @@ public class FenetreImport extends JFrame {
         }
 
         Graphe<?> graph = null;
-
         switch (type){
             case "Simple":
                 graph = new Graphe<KMeanSimple>(new KMeanSimple(2, points));
                 break;
             case "Elongated":
+                graph = new Graphe<KmeanElongated>(new KmeanElongated(2, points));
                 break;
             case "Formes":
                 break;

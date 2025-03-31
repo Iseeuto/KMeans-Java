@@ -92,11 +92,26 @@ public class Application extends JFrame {
      * Crée le pied de page avec les boutons "Précédent" et "Suivant".
      */
     private void creerFooter() {
+        Application app = this;
+
         JPanel footer = new JPanel(new FlowLayout(FlowLayout.LEFT));
         footer.setBackground(Color.DARK_GRAY);
 
         JButton precedent = new JButton("Précédent");
+        precedent.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                app.graph.precedent();
+            }
+        });
+
         JButton suivant = new JButton("Suivant");
+        suivant.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                app.graph.suivant();
+            }
+        });
 
         footer.add(precedent, BorderLayout.WEST);
         footer.add(suivant, BorderLayout.WEST);
@@ -124,10 +139,6 @@ public class Application extends JFrame {
         });
 
         this.creerMenu();
-
-        // Création du graphique avec un algorithme K-Means simple
-        // TODO: Quand le fichier est ouvert, charger le graphe
-        this.graph = new Graphe<>(new KMeanSimple());
 
         // Initialisation de la fenêtre d'importation
         this.fenetreImport = new FenetreImport(this);

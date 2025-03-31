@@ -20,10 +20,10 @@ public abstract class KMean<T> {
     public HashSet<T> elts;
     
     // Ensemble des centres des clusters
-    HashSet<T> centres;
+    public HashSet<T> centres;
     
     // Liste des groupes (chaque groupe est un ensemble d'éléments)
-    ArrayList<HashSet<T>> groupes;
+    public ArrayList<Groupe> groupes;
     
     // Seuil de convergence, utilisé pour arrêter l'algorithme lorsque les centres ne changent plus beaucoup
     static float SEUIL_CONVERGENCE = 0.1f;
@@ -64,20 +64,10 @@ public abstract class KMean<T> {
     /**
      * Calcule une étape de l'algorithme K-means. Cette méthode gère l'attribution des points aux groupes
      * et la mise à jour des centres. Elle est appelée à chaque itération de l'algorithme.
-     * 
-     * @param continuer Indique si l'algorithme doit continuer après cette étape (basé sur la convergence).
+     *
      * @return true si l'algorithme doit continuer, false sinon.
      */
-    protected abstract boolean calculer(boolean continuer);
-
-    /**
-     * Effectue la prochaine étape de l'algorithme K-means, en appelant la méthode {@link #calculer}.
-     * 
-     * @param continuer Indique si l'algorithme doit continuer après cette étape.
-     */
-    public void prochaineEtape(boolean continuer) {
-        this.calculer(continuer);
-    }
+    public abstract boolean calculer();
 
     /**
      * Constructeur principal de la classe KMean.
@@ -92,7 +82,7 @@ public abstract class KMean<T> {
         this.centres = new HashSet<>();
         groupes = new ArrayList<>(k);
         for (int i = 0; i < this.k; i++) {
-            groupes.add(new HashSet<>());
+            groupes.add(new Groupe());
         }
         initialiserCentres();
     }
@@ -107,7 +97,7 @@ public abstract class KMean<T> {
         this.centres = new HashSet<>();
         groupes = new ArrayList<>(k);
         for (int i = 0; i < this.k; i++) {
-            groupes.add(new HashSet<>());
+            groupes.add(new Groupe());
         }
         initialiserCentres();
     }
