@@ -127,13 +127,10 @@ public class KMeanSimple extends KMean<Point>{
      * @return true si les centres doivent encore être mis à jour, false si l'algorithme a convergé
      */
     @Override
-    protected boolean calculer(boolean continuer){ 
-        if (continuer) {
-            MAJGroupes();
-            continuer = MAJCentres();
+    protected boolean calculer(){ 
+        MAJGroupes();
+        return MAJCentres();    
         }
-        return continuer;
-    }
 
     /**
      * Constructeur de la classe KMeanSimple avec un nombre k de clusters et un ensemble d'éléments.

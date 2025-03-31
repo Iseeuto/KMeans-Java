@@ -65,19 +65,9 @@ abstract class KMean<T> {
      * Calcule une étape de l'algorithme K-means. Cette méthode gère l'attribution des points aux groupes
      * et la mise à jour des centres. Elle est appelée à chaque itération de l'algorithme.
      * 
-     * @param continuer Indique si l'algorithme doit continuer après cette étape (basé sur la convergence).
      * @return true si l'algorithme doit continuer, false sinon.
      */
-    protected abstract boolean calculer(boolean continuer);
-
-    /**
-     * Effectue la prochaine étape de l'algorithme K-means, en appelant la méthode {@link #calculer}.
-     * 
-     * @param continuer Indique si l'algorithme doit continuer après cette étape.
-     */
-    public void prochaineEtape(boolean continuer) {
-        this.calculer(continuer);
-    }
+    protected abstract boolean calculer();
 
     /**
      * Constructeur principal de la classe KMean.
