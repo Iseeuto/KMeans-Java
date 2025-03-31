@@ -1,5 +1,6 @@
 package IUG;
 
+import Kmeans.KMean;
 import Kmeans.KMeanSimple;
 
 import javax.swing.*;
@@ -23,12 +24,20 @@ public class Application extends JFrame {
     /**
      * Composant graphique affichant les points et le clustering.
      */
-    protected Graphe<?> graph;
+    private Graphe<?> graph;
 
     /**
      * Fenêtre d'importation des données.
      */
     private final FenetreImport fenetreImport;
+
+    protected void switchGraph(Graphe newGraph){
+        if(this.graph != null){ this.remove(graph); this.graph = null; }
+        this.graph = newGraph;
+        this.add(newGraph);
+        this.revalidate();
+        this.repaint();
+    }
 
     /**
      * Crée le menu de l'application avec les options "Nouveau" et "Ouvrir".
@@ -119,7 +128,6 @@ public class Application extends JFrame {
         // Création du graphique avec un algorithme K-Means simple
         // TODO: Quand le fichier est ouvert, charger le graphe
         this.graph = new Graphe<>(new KMeanSimple());
-        this.add(this.graph);
 
         // Initialisation de la fenêtre d'importation
         this.fenetreImport = new FenetreImport(this);
