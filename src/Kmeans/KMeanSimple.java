@@ -1,10 +1,7 @@
 package Kmeans;
 
 import Formes.Point;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
 
 /**
@@ -155,9 +152,9 @@ public class KMeanSimple extends KMean<Point>{
     public static void main(String[] args) {
         Point a = new Point(1, 1);
         Point b = new Point(2, 2);
-        Point c = new Point(3, 1);
-        Point d = new Point(6, 5);
-        Point e = new Point(7, 6);
+        Point c = new Point(3, 3);
+        Point d = new Point(4, 4);
+        Point e = new Point(5, 6);
         Point f = new Point(8, 5);
         Point g = new Point(9, 8);
         Point h = new Point(10, 7);
@@ -173,6 +170,7 @@ public class KMeanSimple extends KMean<Point>{
         elts.add(g);
         elts.add(h);
 
+        //Test pour la mise à jour des groupes
         KMeanSimple test = new KMeanSimple(3, elts);
 
         System.out.println("Liste des centres :");
@@ -182,10 +180,11 @@ public class KMeanSimple extends KMean<Point>{
 
         test.MAJGroupes();
 
+        //Test pour voir si l'execution du Kmeans marche
         int i =0;
         for(Groupe gr: test.groupes) System.out.println("GROUPE " + i++ + ": " + gr);
 
-        KMeanSimple test1 = new KMeanSimple(3, elts);
+        KMeanSimple test1 = new KMeanSimple(7, elts);
         test1.executerKMeans();
 
         System.out.println("Liste des centres :");
