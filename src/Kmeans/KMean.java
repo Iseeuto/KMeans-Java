@@ -27,7 +27,8 @@ public abstract class KMean<T> {
     public ArrayList<Groupe> groupes;
     
     // Seuil de convergence, utilisé pour arrêter l'algorithme lorsque les centres ne changent plus beaucoup
-    static float SEUIL_CONVERGENCE = 0.1f;
+    static float SEUIL_CONVERGENCE = 0.5f;
+    public boolean seuilAtteint;
 
     /**
      * Calcule la distance entre deux points. Cette méthode est abstraite et doit être implémentée 
@@ -68,7 +69,7 @@ public abstract class KMean<T> {
      *
      * @return true si l'algorithme doit continuer, false sinon.
      */
-    public abstract boolean calculer();
+    public abstract void calculer();
 
     /**
      * Constructeur principal de la classe KMean.

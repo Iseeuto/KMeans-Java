@@ -94,12 +94,13 @@ public class KmeanElongated extends KMeanSimple{
     /**
      * Calcule une itération de l'algorithme K-means en mettant à jour les groupes et les centres.
      *
-     * @return true si les centres doivent encore être mis à jour, false si l'algorithme a convergé
      */
     @Override
-    public boolean calculer(){
-        MAJGroupes();
-        return  MAJCentres();
+    public void calculer(){
+        if(!this.seuilAtteint){
+            MAJGroupes();
+            this.seuilAtteint = !MAJCentres();
+        }
     }
 
     /**

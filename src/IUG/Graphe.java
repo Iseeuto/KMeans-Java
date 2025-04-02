@@ -60,7 +60,8 @@ public class Graphe<K extends KMean<?>> extends JPanel {
 
     public void suivant(){
         if(this.Etapes.get(etapeActuelle+1) == null){
-            if(this.Kmean.calculer()){
+            if(!this.Kmean.seuilAtteint){
+                this.Kmean.calculer();
                 this.etapeActuelle++;
                 this.Etapes.put(this.etapeActuelle, (HashSet<Point>) this.Kmean.centres.clone());
             }
