@@ -1,5 +1,6 @@
 package IUG;
 
+import Formes.Point;
 import Kmeans.KMean;
 import Kmeans.KMeanSimple;
 import Kmeans.KmeanElongated;
@@ -31,13 +32,13 @@ public class FenetreImport extends JFrame {
      */
     private Application app;
 
-    private void loadFile(String type){
+    private void loadFile(String type, int nbCentres){
         ArrayList<String> lines = new ArrayList();
         int numline = 0;
         while(this.scanner.hasNextLine()){ lines.add(this.scanner.nextLine()); }
 
         String[] labels = lines.get(0).split(";");
-        HashSet<Formes.Point> points = new HashSet<>();
+        ArrayList<Formes.Point> points = new ArrayList<>();
         for(int i=1; i<lines.size(); i++){
             // TODO: faire pour n dimensions
             String[] s = lines.get(i).split(";");
@@ -48,10 +49,10 @@ public class FenetreImport extends JFrame {
         Graphe<?> graph = null;
         switch (type){
             case "Simple":
-                graph = new Graphe<KMeanSimple>(new KMeanSimple(2, points));
+                graph = new Graphe<KMeanSimple>(new KMeanSimple(nbCentres, points));
                 break;
             case "Elongated":
-                graph = new Graphe<KmeanElongated>(new KmeanElongated(2, points));
+                graph = new Graphe<KmeanElongated>(new KmeanElongated(nbCentres, points));
                 break;
             case "Formes":
                 break;
@@ -109,13 +110,24 @@ public class FenetreImport extends JFrame {
         boite.setSelectedIndex(0);
         panel.add(boite);
 
+        SpinnerModel model = new SpinnerNumberModel(
+                2, // Valeur initiale
+                2, // Valeur minimum
+                20, // Valeur maximum
+                1 // Pas
+        );
+        JSpinner spinner = new JSpinner(model);
+        JComponent editor = spinner.getEditor();
+        if(editor instanceof JSpinner.DefaultEditor){ JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) editor; spinnerEditor.getTextField().setEditable(false); }
+        panel.add(spinner);
+
         // Bouton d'importation des données
         JButton importer = new JButton("Importer");
         importer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(filename.getText() != ""){
-                    parent.loadFile(String.valueOf(boite.getSelectedItem()));
+                    parent.loadFile(String.valueOf(boite.getSelectedItem()), (Integer) spinner.getValue());
                     parent.setVisible(false);
                 }
                 else {

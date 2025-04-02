@@ -48,7 +48,7 @@ public class Graphe<K extends KMean<?>> extends JPanel {
     /**
      * Liste des points affichés sur le graphique.
      */
-    private HashSet<Formes.Point> Points = new HashSet<>();
+    private ArrayList<Formes.Point> Points;
 
     /**
      * Contient une map <etape, centres> avec etape le numero de l'étape correspondante  à
@@ -117,26 +117,19 @@ public class Graphe<K extends KMean<?>> extends JPanel {
     private void dessinerCentres(Graphics g, float xMax, float yMax){
         HashSet<Formes.Point> centres = this.Etapes.get(this.etapeActuelle);
         for(Formes.Point p : centres){
-            Groupe groupe = p.groupe;
+            Groupe groupe = p.getGroupe();
 
-            float majeur = Float.MIN_VALUE, mineur = Float.MIN_VALUE;
             float dist = Float.MIN_VALUE;
 
             int posX = (int) (p.getX() / ( xMax / (double) (this.getWidth() - xOffset)));
             int posY = (int) (p.getY() / ( yMax / (double) (this.getHeight() - yOffset)));
 
-            for(Formes.Point _p : p.groupe.points){
+            for(Formes.Point _p : p.getGroupe().points){
 
                 int _posX = (int) (_p.getX() / ( xMax / (double) (this.getWidth() - xOffset)));
                 int _posY = (int) (_p.getY() / ( yMax / (double) (this.getHeight() - yOffset)));
-
-                majeur = Float.max(majeur, Math.abs(posX-_posX));
-                mineur = Float.max(mineur, Math.abs(posY-_posY));
                 dist = Float.max(dist, Point.distanceEuclidienne(new Point(posX, posY), new Point(_posX, _posY)));
             }
-
-            majeur *= 2;
-            mineur *= 2;
             dist *= 2;
 
 
@@ -162,8 +155,8 @@ public class Graphe<K extends KMean<?>> extends JPanel {
             if (p == this.hovered) {
                 g.setColor(Color.WHITE);
             } else {
-                if(p.groupe == null) g.setColor(Color.BLACK);
-                else g.setColor(p.groupe.couleur);
+                if(p.getGroupe() == null) g.setColor(Color.BLACK);
+                else g.setColor(p.getGroupe().couleur);
             }
 
             g.fillOval(posX-taillePoint/2, posY-taillePoint/2, this.taillePoint, this.taillePoint);
@@ -220,7 +213,7 @@ public class Graphe<K extends KMean<?>> extends JPanel {
 //            this.Points.add(new Point((int) (Math.random() * 800), (int) (Math.random() * 600)));
 //        }
 
-        this.Points = (HashSet<Formes.Point>) this.Kmean.elts;
+        this.Points = (ArrayList<Formes.Point>) this.Kmean.elts;
         this.Etapes.put(this.etapeActuelle, (HashSet<Point>) this.Kmean.centres.clone());
 
         setBackground(Color.LIGHT_GRAY);

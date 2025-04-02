@@ -1,6 +1,8 @@
 package Kmeans;
 
 import Formes.Point;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
@@ -36,6 +38,7 @@ public class KMeanSimple extends KMean<Point>{
                 Groupe g = new Groupe();
                 centre.setGroupe(g);
                 this.centres.add(centre);
+                this.groupes.add(g);
                 compteur += 1;
             }
         }
@@ -72,10 +75,11 @@ public class KMeanSimple extends KMean<Point>{
                 float distance = this.distance(p, centre);
                 if (distance < min){
                     min = distance;
-                    meilleurGroupe = centre.groupe;
+                    meilleurGroupe = centre.getGroupe();
                 }
             }
             meilleurGroupe.points.add(p);
+            p.setGroupe(meilleurGroupe);
         }
     }
 
@@ -89,7 +93,7 @@ public class KMeanSimple extends KMean<Point>{
     protected boolean MAJCentres(){
         boolean continuer = false;
         for (Point centre : centres) {
-            HashSet<Point> liste = centre.groupe.points;
+            ArrayList<Point> liste = centre.getGroupe().points;
             float taille = liste.size();
             float newX = 0;
             float newY = 0;
@@ -137,7 +141,7 @@ public class KMeanSimple extends KMean<Point>{
      * @param k Le nombre de clusters à créer
      * @param elements L'ensemble de points à regrouper
      */
-    public KMeanSimple(int k, HashSet<Point> elements){
+    public KMeanSimple(int k, ArrayList<Point> elements){
         super(k, elements);
     }
 
@@ -145,7 +149,7 @@ public class KMeanSimple extends KMean<Point>{
      * Constructeur par défaut qui initialise k à 2 et crée un ensemble vide de points.
      */
     public KMeanSimple(){
-        super(2, new HashSet<>());
+        super(2, new ArrayList<>());
     }
 
     /**
@@ -163,7 +167,7 @@ public class KMeanSimple extends KMean<Point>{
         Point g = new Point(9, 8);
         Point h = new Point(10, 7);
 
-        HashSet<Point> elts = new HashSet<>();
+        ArrayList<Point> elts = new ArrayList<>();
 
         elts.add(a);
         elts.add(b);
@@ -183,13 +187,7 @@ public class KMeanSimple extends KMean<Point>{
 
         test.MAJGroupes();
 
-        for(int i = 0; i < test.k; i++){
-            HashSet<Point> liste = test.groupes.get(i).points;
-            System.out.printf("Groupe %d%n", i);
-            for (Point p: liste){
-                System.out.println(p);
-            }
-        }
+        for(Groupe gr: test.groupes) System.out.println("GROUPE: " + gr);
 
         KMeanSimple test1 = new KMeanSimple(3, elts);
         test1.executerKMeans();
@@ -201,7 +199,7 @@ public class KMeanSimple extends KMean<Point>{
         System.err.println("");
 
         for(int i = 0; i < test1.k; i++){
-            HashSet<Point> liste = test1.groupes.get(i).points;
+            ArrayList<Point> liste = test1.groupes.get(i).points;
             System.out.printf("Groupe %d%n", i);
             for (Point p: liste){
                 System.out.println(p);

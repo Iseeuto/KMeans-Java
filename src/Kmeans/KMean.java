@@ -3,6 +3,7 @@ package Kmeans;
 import Formes.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * Classe abstraite représentant l'algorithme K-means générique pour un ensemble de données.
@@ -17,7 +18,7 @@ public abstract class KMean<T> {
     int k;
     
     // Ensemble d'éléments à regrouper
-    public HashSet<T> elts;
+    public ArrayList<T> elts;
     
     // Ensemble des centres des clusters
     public HashSet<T> centres;
@@ -69,39 +70,26 @@ public abstract class KMean<T> {
      */
     public abstract boolean calculer();
 
-    /*Méthode permettant de renvoyé si les elements sont identiques
-    *
-    */
-    private boolean elementsIdentiques(){
-    //     if(elts.size() == 0){
-    //         return true;
-    //     }
-
-    //     Iterator<T> it = elts.iterator();
-    //     T cur = it.next();
-    //     while(it.hasNext()){
-    //         if(!cur )
-    //     }
-    return false;
-    }
-
     /**
      * Constructeur principal de la classe KMean.
      * 
      * @param k Le nombre de clusters.
      * @param elements L'ensemble des éléments à regrouper.
      */
-    KMean(int k, HashSet<T> elements) {
-        //Scénario 1 : le nombre k est supérieur au nombre de point
-        if (k > elements.size()) {
-            throw new IllegalArgumentException("Le nombre de clusters k ne peut pas être supérieur au nombre de points.");
-        }
+    KMean(int k, ArrayList<T> elements) {
+        // Gestion Erreur (nombre de groupe > nombre d'éléments)
+        if(k > elements.size()){ throw new IllegalArgumentException("Le nombre de groupe ne peut pas être supérieur au nombre d'éléments"); }
         this.k = k;
         this.elts = elements;
-        //Scénario 2 : Tous les points sont identiques
-        if(elementsIdentiques()){
-            throw new IllegalArgumentException("Les points doivent être différents pour pouvoir effectuer le k-mean");
+
+        // Gestion Erreur (tout les éléments identiques)
+        Iterator<T> it = elts.iterator();
+        T first = it.next();
+        while(it.hasNext()){
+            if(!first.equals(it.next())) break;
+            else if(!it.hasNext()){ throw new IllegalArgumentException("Les éléments ne peuvent pas être identiques"); }
         }
+
         this.centres = new HashSet<>();
         groupes = new ArrayList<>(k);
         for (int i = 0; i < this.k; i++) {
@@ -116,7 +104,7 @@ public abstract class KMean<T> {
      */
     KMean() {
         this.k = 2;
-        this.elts = new HashSet<>();
+        this.elts = new ArrayList<>();
         this.centres = new HashSet<>();
         groupes = new ArrayList<>(k);
         for (int i = 0; i < this.k; i++) {
@@ -124,6 +112,4 @@ public abstract class KMean<T> {
         }
         initialiserCentres();
     }
-
-
 }
