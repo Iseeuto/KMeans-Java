@@ -86,10 +86,9 @@ public abstract class KMean<T> {
         // Gestion Erreur (tout les éléments identiques)
         Iterator<T> it = elts.iterator();
         T first = it.next();
-        while(it.hasNext()){
-            if(!first.equals(it.next())) break;
-            else if(!it.hasNext()){ throw new IllegalArgumentException("Les éléments ne peuvent pas être identiques"); }
-        }
+        int dif = 0;
+        while(it.hasNext()){ if(!first.equals(it.next())) dif++; }
+        if(dif < k) throw new IllegalArgumentException("Les éléments ne peuvent pas être identiques");
 
         this.centres = new HashSet<>();
         groupes = new ArrayList<>(k);

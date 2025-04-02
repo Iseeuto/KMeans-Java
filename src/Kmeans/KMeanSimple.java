@@ -195,7 +195,7 @@ public class KMeanSimple extends KMean<Point>{
         System.err.println("");
 
         i=0;
-        for(Groupe gr: test.groupes) System.out.println("GROUPE " + i++ + ": " + gr);
+        for(Groupe gr: test1.groupes) System.out.println("GROUPE " + i++ + ": " + gr);
 
         //Test pour vérifier qu'une exception est bien levé quand k est supérieur au nombre de points
         try {

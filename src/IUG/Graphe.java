@@ -3,6 +3,8 @@ package IUG;
 import Formes.Point;
 import Kmeans.Groupe;
 import Kmeans.KMean;
+import Kmeans.KMeanSimple;
+import Kmeans.KmeanElongated;
 
 import javax.swing.*;
 import java.awt.*;
@@ -115,7 +117,7 @@ public class Graphe<K extends KMean<?>> extends JPanel {
                 mouseY >= posY - rayon && mouseY <= posY + rayon);
     }
 
-    private void dessinerCentres(Graphics g, float xMax, float yMax){
+    private void dessinerCentres(KMeanSimple KM, Graphics g, float xMax, float yMax){
         HashSet<Formes.Point> centres = this.Etapes.get(this.etapeActuelle);
         for(Formes.Point p : centres){
             Groupe groupe = p.getGroupe();
@@ -135,9 +137,36 @@ public class Graphe<K extends KMean<?>> extends JPanel {
 
 
             g.setColor(groupe.couleur);
-            g.fillOval(posX-taillePoint/2, posY-this.taillePoint, this.taillePoint, this.taillePoint);
+            //g.fillOval(posX-taillePoint/2, posY-this.taillePoint, this.taillePoint, this.taillePoint);
             //g.drawOval(posX-Math.round(majeur/2), posY-Math.round(mineur/2), Math.round(majeur), Math.round(mineur));
             g.drawArc(posX-Math.round(dist/2), posY-Math.round(dist/2), Math.round(dist), Math.round(dist), 0,360);
+        }
+    }
+
+    private void dessinerCentres(KmeanElongated KM, Graphics g, float xMax, float yMax){
+        HashSet<Formes.Point> centres = this.Etapes.get(this.etapeActuelle);
+        for(Formes.Point p : centres){
+            Groupe groupe = p.getGroupe();
+
+            float majeur = Float.MIN_VALUE, mineur = Float.MIN_VALUE;
+
+            int posX = (int) (p.getX() / ( xMax / (double) (this.getWidth() - xOffset)));
+            int posY = (int) (p.getY() / ( yMax / (double) (this.getHeight() - yOffset)));
+
+            for(Formes.Point _p : p.getGroupe().points){
+
+                int _posX = (int) (_p.getX() / ( xMax / (double) (this.getWidth() - xOffset)));
+                int _posY = (int) (_p.getY() / ( yMax / (double) (this.getHeight() - yOffset)));
+
+                majeur = Float.max(majeur, Math.abs(_posX - posX));
+                mineur = Float.max(mineur, Math.abs(_posY - posY));
+            }
+            majeur *= 2; mineur *= 2;
+
+            g.setColor(groupe.couleur);
+            //g.fillOval(posX-taillePoint/2, posY-this.taillePoint, this.taillePoint, this.taillePoint);
+            g.drawOval(posX-Math.round(majeur/2), posY-Math.round(mineur/2), Math.round(majeur), Math.round(mineur));
+            //g.drawArc(posX-Math.round(dist/2), posY-Math.round(dist/2), Math.round(dist), Math.round(dist), 0,360);
         }
     }
 
@@ -156,7 +185,7 @@ public class Graphe<K extends KMean<?>> extends JPanel {
             if (p == this.hovered) {
                 g.setColor(Color.WHITE);
             } else {
-                if(p.getGroupe() == null) g.setColor(Color.BLACK);
+                if(p.getGroupe() == null) g.setColor(Color.WHITE);
                 else g.setColor(p.getGroupe().couleur);
             }
 
@@ -195,7 +224,11 @@ public class Graphe<K extends KMean<?>> extends JPanel {
         // Déssiner les points
         dessinerPoints(g, xMax, yMax);
 
-        if(etapeActuelle > 0) dessinerCentres(g, xMax, yMax);
+        if(etapeActuelle > 0){
+            if(this.Kmean instanceof KmeanElongated) dessinerCentres((KmeanElongated) this.Kmean, g, xMax, yMax);
+            else if(this.Kmean instanceof KMeanSimple) dessinerCentres((KMeanSimple) this.Kmean, g, xMax, yMax);
+        }
+
 
         // Déssiner les informations du point survolé à la fin
         if(this.hovered != null){ dessinerInformations(g, xMax, yMax); }
@@ -217,7 +250,7 @@ public class Graphe<K extends KMean<?>> extends JPanel {
         this.Points = (ArrayList<Formes.Point>) this.Kmean.elts;
         this.Etapes.put(this.etapeActuelle, (HashSet<Point>) this.Kmean.centres.clone());
 
-        setBackground(Color.LIGHT_GRAY);
+        setBackground(Color.BLACK);
 
         // Ajoute un écouteur pour détecter le survol des points
         addMouseMotionListener(new MouseAdapter() {
