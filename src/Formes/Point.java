@@ -1,5 +1,7 @@
 package Formes;
 
+import Kmeans.Groupe;
+
 /**
  * Classe représentant un point dans un espace à deux dimensions.
  * Cette classe permet de créer des objets représentant des points avec des coordonnées x et y, ainsi qu'un groupe associé.
@@ -10,7 +12,7 @@ public class Point {
     private float x;
     private float y;
 
-    public int groupe;
+    public Groupe groupe;
 
     /**
      * Constructeur de la classe Point avec deux paramètres de coordonnées.
@@ -22,7 +24,7 @@ public class Point {
     public Point(float x, float y){
         this.x = x;
         this.y = y;
-        this.groupe = -1;
+        this.groupe = null;
     }
 
     /**
@@ -32,7 +34,7 @@ public class Point {
     Point(){
         this.x = 0;
         this.y = 0;
-        this.groupe = -1;
+        this.groupe = null;
     }
 
     /**
@@ -76,7 +78,7 @@ public class Point {
      * 
      * @return Le groupe du point.
      */
-    public int getGroupe(){
+    public Groupe getGroupe(){
         return this.groupe;
     }
 
@@ -85,7 +87,7 @@ public class Point {
      * 
      * @param g Le groupe à assigner au point.
      */
-    public void setGroupe(int g){
+    public void setGroupe(Groupe g){
         this.groupe = g;
     }
 

@@ -1,5 +1,7 @@
 package IUG;
 
+import Formes.Point;
+import Kmeans.Groupe;
 import Kmeans.KMean;
 
 import javax.swing.*;
@@ -8,8 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -50,6 +51,32 @@ public class Graphe<K extends KMean<?>> extends JPanel {
     private HashSet<Formes.Point> Points = new HashSet<>();
 
     /**
+     * Contient une map <etape, centres> avec etape le numero de l'étape correspondante  à
+     * centres, une liste des centres à l'étape donnée.
+     */
+    private HashMap<Integer, HashSet<Formes.Point>> Etapes = new HashMap<>();
+
+    private int etapeActuelle = 0;
+
+    public void suivant(){
+        if(this.Etapes.get(etapeActuelle+1) == null){
+            if(this.Kmean.calculer()){
+                this.etapeActuelle++;
+                this.Etapes.put(this.etapeActuelle, (HashSet<Point>) this.Kmean.centres.clone());
+            }
+        } else {
+            this.etapeActuelle++;
+        }
+        this.repaint();
+    }
+
+    public void precedent(){
+        if(this.etapeActuelle > 0) this.etapeActuelle--;
+        this.repaint();
+        return;
+    }
+
+    /**
      * Retourne les points extrêmes du graphique.
      * Ces points représentent les valeurs maximales et minimales en X et Y.
      *
@@ -87,12 +114,60 @@ public class Graphe<K extends KMean<?>> extends JPanel {
                 mouseY >= posY - rayon && mouseY <= posY + rayon);
     }
 
+    private void dessinerCentres(Graphics g, float xMax, float yMax){
+        HashSet<Formes.Point> centres = this.Etapes.get(this.etapeActuelle);
+        for(Formes.Point p : centres){
+            Groupe groupe = p.groupe;
+
+            float majeur = Float.MIN_VALUE, mineur = Float.MIN_VALUE;
+            float dist = Float.MIN_VALUE;
+
+            int posX = (int) (p.getX() / ( xMax / (double) (this.getWidth() - xOffset)));
+            int posY = (int) (p.getY() / ( yMax / (double) (this.getHeight() - yOffset)));
+
+            for(Formes.Point _p : p.groupe.points){
+
+                int _posX = (int) (_p.getX() / ( xMax / (double) (this.getWidth() - xOffset)));
+                int _posY = (int) (_p.getY() / ( yMax / (double) (this.getHeight() - yOffset)));
+
+                majeur = Float.max(majeur, Math.abs(posX-_posX));
+                mineur = Float.max(mineur, Math.abs(posY-_posY));
+                dist = Float.max(dist, Point.distanceEuclidienne(new Point(posX, posY), new Point(_posX, _posY)));
+            }
+
+            majeur *= 2;
+            mineur *= 2;
+            dist *= 2;
+
+
+            g.setColor(groupe.couleur);
+            g.fillOval(posX-taillePoint/2, posY-this.taillePoint, this.taillePoint, this.taillePoint);
+            //g.drawOval(posX-Math.round(majeur/2), posY-Math.round(mineur/2), Math.round(majeur), Math.round(mineur));
+            g.drawArc(posX-Math.round(dist/2), posY-Math.round(dist/2), Math.round(dist), Math.round(dist), 0,360);
+        }
+    }
+
     /**
      * Méthode servant à dessiner les points sur le graphique.
-     * Actuellement, cette méthode est vide.
      */
-    private void dessinerPoints() {
-        return;
+    private void dessinerPoints(Graphics g, float xMax, float yMax) {
+        int posX;
+        int posY;
+        for (Formes.Point p : Points) {
+
+            posX = (int) (p.getX() / ((double) xMax / (double) (this.getWidth() - xOffset)));
+            posY = (int) (p.getY() / ((double) yMax / (double) (this.getHeight() - yOffset)));
+
+            // Change la couleur du point si celui-ci est survolé
+            if (p == this.hovered) {
+                g.setColor(Color.WHITE);
+            } else {
+                if(p.groupe == null) g.setColor(Color.BLACK);
+                else g.setColor(p.groupe.couleur);
+            }
+
+            g.fillOval(posX-taillePoint/2, posY-taillePoint/2, this.taillePoint, this.taillePoint);
+        }
     }
 
     private void dessinerInformations(Graphics g, float xMax, float yMax){
@@ -123,22 +198,11 @@ public class Graphe<K extends KMean<?>> extends JPanel {
         Formes.Point[] extremes = this.getExtremes();
         float xMax = extremes[0].getX(), yMax = extremes[0].getY();
 
-        int posX;
-        int posY;
-        for (Formes.Point p : Points) {
+        // Déssiner les points
+        dessinerPoints(g, xMax, yMax);
 
-            posX = (int) (p.getX() / ((double) xMax / (double) (this.getWidth() - xOffset)));
-            posY = (int) (p.getY() / ((double) yMax / (double) (this.getHeight() - yOffset)));
+        if(etapeActuelle > 0) dessinerCentres(g, xMax, yMax);
 
-            // Change la couleur du point si celui-ci est survolé
-            if (p == this.hovered) {
-                g.setColor(Color.WHITE);
-            } else {
-                g.setColor(Color.BLACK);
-            }
-
-            g.fillOval(posX, posY, this.taillePoint, this.taillePoint);
-        }
         // Déssiner les informations du point survolé à la fin
         if(this.hovered != null){ dessinerInformations(g, xMax, yMax); }
     }
@@ -157,6 +221,7 @@ public class Graphe<K extends KMean<?>> extends JPanel {
 //        }
 
         this.Points = (HashSet<Formes.Point>) this.Kmean.elts;
+        this.Etapes.put(this.etapeActuelle, (HashSet<Point>) this.Kmean.centres.clone());
 
         setBackground(Color.LIGHT_GRAY);
 
