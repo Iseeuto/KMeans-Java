@@ -14,7 +14,6 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
-
 /**
  * Classe représentant une fenêtre permettant d'importer des fichiers de données.
  * Cette fenêtre permet de sélectionner un fichier CSV et de choisir
@@ -28,31 +27,41 @@ public class FenetreImport extends JFrame {
     private Scanner scanner = null;
 
     /**
-     * Application parente de la fenêtre
+     * Application parente de la fenêtre.
      */
     private Application app;
 
-    private void loadFile(String type, int nbCentres){
-        ArrayList<String> lines = new ArrayList();
-        int numline = 0;
-        while(this.scanner.hasNextLine()){ lines.add(this.scanner.nextLine()); }
+    /**
+     * Charge un fichier de données et applique l'algorithme K-Means correspondant.
+     *
+     * @param type      Type d'algorithme K-Means ("Simple", "Elongated", "Formes").
+     * @param nbCentres Nombre de centres pour le clustering.
+     */
+    private void loadFile(String type, int nbCentres) {
+        ArrayList<String> lines = new ArrayList<>();
+        while (this.scanner.hasNextLine()) {
+            lines.add(this.scanner.nextLine());
+        }
 
         String[] labels = lines.get(0).split(";");
         ArrayList<Formes.Point> points = new ArrayList<>();
-        for(int i=1; i<lines.size(); i++){
+        for (int i = 1; i < lines.size(); i++) {
             // TODO: faire pour n dimensions
             String[] s = lines.get(i).split(";");
-            Formes.Point p = new Formes.Point(Float.parseFloat(s[0].replace(',', '.')), Float.parseFloat(s[1].replace(',', '.')));
+            Formes.Point p = new Formes.Point(
+                    Float.parseFloat(s[0].replace(',', '.')),
+                    Float.parseFloat(s[1].replace(',', '.'))
+            );
             points.add(p);
         }
 
         Graphe<?> graph = null;
-        switch (type){
+        switch (type) {
             case "Simple":
-                graph = new Graphe<KMeanSimple>(new KMeanSimple(nbCentres, points));
+                graph = new Graphe<>(new KMeanSimple(nbCentres, points));
                 break;
             case "Elongated":
-                graph = new Graphe<KmeanElongated>(new KmeanElongated(nbCentres, points));
+                graph = new Graphe<>(new KmeanElongated(nbCentres, points));
                 break;
             case "Formes":
                 break;
@@ -82,24 +91,19 @@ public class FenetreImport extends JFrame {
         fileImport.add(importButton);
 
         FenetreImport parent = this; // Référence à la fenêtre actuelle
-        importButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser choice = new JFileChooser();
-                FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                        "Fichiers tableur (.csv)", "csv"
-                );
-                choice.setFileFilter(filter);
+        importButton.addActionListener(e -> {
+            JFileChooser choice = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Fichiers tableur (.csv)", "csv");
+            choice.setFileFilter(filter);
 
-                int option = choice.showOpenDialog(getParent());
-                if (option == JFileChooser.APPROVE_OPTION) {
-                    try {
-                        parent.scanner = new Scanner(new FileReader(choice.getSelectedFile().getPath()));
-                        filename.setText(choice.getSelectedFile().getName());
-                        filename.repaint();
-                    } catch (Exception ex) {
-                        throw new RuntimeException(ex);
-                    }
+            int option = choice.showOpenDialog(getParent());
+            if (option == JFileChooser.APPROVE_OPTION) {
+                try {
+                    parent.scanner = new Scanner(new FileReader(choice.getSelectedFile().getPath()));
+                    filename.setText(choice.getSelectedFile().getName());
+                    filename.repaint();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
                 }
             }
         });
@@ -110,29 +114,22 @@ public class FenetreImport extends JFrame {
         boite.setSelectedIndex(0);
         panel.add(boite);
 
-        SpinnerModel model = new SpinnerNumberModel(
-                2, // Valeur initiale
-                2, // Valeur minimum
-                20, // Valeur maximum
-                1 // Pas
-        );
+        SpinnerModel model = new SpinnerNumberModel(2, 2, 20, 1);
         JSpinner spinner = new JSpinner(model);
         JComponent editor = spinner.getEditor();
-        if(editor instanceof JSpinner.DefaultEditor){ JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) editor; spinnerEditor.getTextField().setEditable(false); }
+        if (editor instanceof JSpinner.DefaultEditor) {
+            ((JSpinner.DefaultEditor) editor).getTextField().setEditable(false);
+        }
         panel.add(spinner);
 
         // Bouton d'importation des données
         JButton importer = new JButton("Importer");
-        importer.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(filename.getText() != ""){
-                    parent.loadFile(String.valueOf(boite.getSelectedItem()), (Integer) spinner.getValue());
-                    parent.setVisible(false);
-                }
-                else {
-                 // TODO: Throw une erreur custom avec un JDialogue
-                }
+        importer.addActionListener(e -> {
+            if (!filename.getText().isEmpty()) {
+                parent.loadFile(String.valueOf(boite.getSelectedItem()), (Integer) spinner.getValue());
+                parent.setVisible(false);
+            } else {
+                // TODO: Throw une erreur custom avec un JDialogue
             }
         });
         panel.add(importer);
@@ -143,6 +140,8 @@ public class FenetreImport extends JFrame {
     /**
      * Constructeur de la classe {@code FenetreImport}.
      * Initialise la fenêtre avec ses composants et ses propriétés.
+     *
+     * @param parent Application parente de la fenêtre d'importation.
      */
     public FenetreImport(Application parent) {
         super("Importer données");

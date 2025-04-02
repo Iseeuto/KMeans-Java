@@ -83,7 +83,7 @@ public abstract class KMean<T> {
         this.k = k;
         this.elts = elements;
 
-        // Gestion Erreur (tout les éléments identiques)
+        // Gestion Erreur (trop d'éléments identiques)
         Iterator<T> it = elts.iterator();
         HashSet<T> l = new HashSet<>();
         while(it.hasNext()) l.add(it.next());

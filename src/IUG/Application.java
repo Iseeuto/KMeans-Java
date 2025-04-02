@@ -17,9 +17,14 @@ import java.awt.event.WindowEvent;
 public class Application extends JFrame {
 
     /**
-     * Dimensions par défaut de la fenêtre.
+     * Largeur par défaut de la fenêtre de l'application.
      */
-    private final int tailleX = 800, tailleY = 600;
+    private final int tailleX = 800;
+
+    /**
+     * Hauteur par défaut de la fenêtre de l'application.
+     */
+    private final int tailleY = 600;
 
     /**
      * Composant graphique affichant les points et le clustering.
@@ -31,8 +36,16 @@ public class Application extends JFrame {
      */
     private final FenetreImport fenetreImport;
 
-    protected void switchGraph(Graphe newGraph){
-        if(this.graph != null){ this.remove(graph); this.graph = null; }
+    /**
+     * Permet de remplacer le graphique affiché dans l'application.
+     *
+     * @param newGraph Nouveau graphique à afficher.
+     */
+    protected void switchGraph(Graphe newGraph) {
+        if (this.graph != null) {
+            this.remove(graph);
+            this.graph = null;
+        }
         this.graph = newGraph;
         this.add(newGraph);
         this.revalidate();
@@ -40,24 +53,21 @@ public class Application extends JFrame {
     }
 
     /**
-     * Crée le menu de l'application avec les options "Nouveau" et "Ouvrir".
+     * Crée le menu de l'application avec les options "Nouveau", "Ouvrir" et "Fermer".
      */
     private void creerMenu() {
         JMenuBar menuBar = new JMenuBar();
         JMenu fichier = new JMenu("Fichier");
 
-        // Option "Nouveau" pour ouvrir une nouvelle fenêtre
         JMenuItem nouveau = new JMenuItem("Nouveau");
         nouveau.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Créer une nouvelle fenêtre d'application
                 Application newApp = new Application();
                 newApp.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             }
         });
 
-        // Option "Ouvrir" pour afficher la fenêtre d'importation
         JMenuItem ouvrir = new JMenuItem("Ouvrir");
         Application app = this;
         ouvrir.addActionListener(new ActionListener() {
@@ -121,36 +131,31 @@ public class Application extends JFrame {
 
     /**
      * Constructeur de la classe {@code Application}.
-     * Initialise la fenêtre, le menu, le graphique et la fenêtre d'importation.
+     * Initialise la fenêtre principale, le menu, le graphique et la fenêtre d'importation.
      */
     public Application() {
         super("Visualisateur KMeans");
 
-        // Définition des propriétés de la fenêtre
         this.setBounds(new Rectangle(tailleX, tailleY));
         this.setIconImage(new ImageIcon("src/icon.png").getImage());
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        // Fermer la fenêtre d'import lors de la fermeture de l'application
         Application app = this;
         this.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e) { app.fenetreImport.dispose(); }
+            public void windowClosing(WindowEvent e) {
+                app.fenetreImport.dispose();
+            }
         });
 
         this.creerMenu();
-
-        // Initialisation de la fenêtre d'importation
         this.fenetreImport = new FenetreImport(this);
-
         this.creerFooter();
-
-        // Affichage de la fenêtre principale
         this.setVisible(true);
     }
 
     /**
-     * Méthode principale lançant l'application.
+     * Méthode principale permettant de lancer l'application.
      *
      * @param args Arguments de la ligne de commande (non utilisés).
      */
