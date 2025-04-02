@@ -32,8 +32,8 @@ public class KMeanSimple extends KMean<Point>{
         int compteur = 0;
         while(compteur < k){
             indice = random.nextInt(taille);
-            if (!this.centres.contains(liste.get(indice))){
-                Point p = liste.get(indice);
+            Point p = liste.get(indice);
+            if (!this.centres.contains(p)){
                 Point centre = new Point(p.getX(), p.getY());
                 Groupe g = new Groupe();
                 centre.setGroupe(g);
@@ -63,9 +63,7 @@ public class KMeanSimple extends KMean<Point>{
     @Override
     protected void MAJGroupes(){
         // Vidage des groupes avant de pouvoir les remplir
-        for (int i = 0; i < k; i++) {
-            groupes.get(i).points.clear();
-        }
+        for(Groupe g : this.groupes) g.points.clear();
 
         // Pour chaque point, on recherche le centre le plus proche et on l'ajoute dans le groupe correspondant
         for(Point p: elts){
@@ -117,11 +115,7 @@ public class KMeanSimple extends KMean<Point>{
      * Exécute l'algorithme des K-means jusqu'à convergence. À chaque itération, les groupes sont mis à jour, puis les centres.
      */
     public void executerKMeans() {
-        boolean continuer = true;
-        while (continuer) {
-            MAJGroupes();   // Mise à jour des groupes
-            continuer = MAJCentres();  // Mise à jour des centres et vérification de la convergence
-        }
+        while(!seuilAtteint) calculer();
     }
 
     /**
@@ -188,7 +182,8 @@ public class KMeanSimple extends KMean<Point>{
 
         test.MAJGroupes();
 
-        for(Groupe gr: test.groupes) System.out.println("GROUPE: " + gr);
+        int i =0;
+        for(Groupe gr: test.groupes) System.out.println("GROUPE " + i++ + ": " + gr);
 
         KMeanSimple test1 = new KMeanSimple(3, elts);
         test1.executerKMeans();
@@ -199,13 +194,8 @@ public class KMeanSimple extends KMean<Point>{
         }
         System.err.println("");
 
-        for(int i = 0; i < test1.k; i++){
-            ArrayList<Point> liste = test1.groupes.get(i).points;
-            System.out.printf("Groupe %d%n", i);
-            for (Point p: liste){
-                System.out.println(p);
-            }
-        }
+        i=0;
+        for(Groupe gr: test.groupes) System.out.println("GROUPE " + i++ + ": " + gr);
 
         //Test pour vérifier qu'une exception est bien levé quand k est supérieur au nombre de points
         try {

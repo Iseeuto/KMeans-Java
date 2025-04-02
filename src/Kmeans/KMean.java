@@ -93,9 +93,6 @@ public abstract class KMean<T> {
 
         this.centres = new HashSet<>();
         groupes = new ArrayList<>(k);
-        for (int i = 0; i < this.k; i++) {
-            groupes.add(new Groupe());
-        }
         initialiserCentres();
     }
 
