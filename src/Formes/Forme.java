@@ -1,6 +1,9 @@
 package Formes;
 
-/** 
+import java.util.HashSet;
+import java.util.Random;
+
+/**
  * Classe représentant une forme géométrique de base.
  * Cette classe est destinée à être étendue par d'autres classes représentant des formes spécifiques, 
  * comme un cercle ou une ellipse.
@@ -10,7 +13,11 @@ package Formes;
  */
 public class Forme {
 
+    // Centre de la Forme
     protected Point centre;
+
+    // Points composant la forme
+    protected HashSet<Point> points;
 
     /**
      * Constructeur de la classe Forme avec un point spécifiant le centre.
@@ -23,10 +30,19 @@ public class Forme {
 
     /**
      * Constructeur par défaut de la classe Forme.
-     * Ce constructeur initialise la forme avec un centre à (0, 0).
+     * Ce constructeur initialise une forme aléatoire.
      */
     Forme(){
-        this.centre = new Point();
+        Random rand = new Random();
+        this.centre = new Point(rand.nextInt(500), rand.nextInt(500));
+        this.points = new HashSet<>();
+
+        int nb_points = rand.nextInt(100);
+        for(int i=0; i<nb_points;i++){
+            double angle = Math.random()*360;
+            double dist = Math.random()*100;
+            this.points.add(new Point((float) (centre.getX() + (dist* Math.toRadians(angle))), (float) (centre.getY() + (dist* Math.toRadians(angle)))));
+        }
     }
 
     /**

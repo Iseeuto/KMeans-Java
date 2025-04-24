@@ -106,7 +106,7 @@ public class FenetreImport extends JFrame {
         });
 
         // Choix du type d'algorithme K-Means
-        String[] choix = {"Simple", "Elongated", "Formes"};
+        String[] choix = {"Simple", "Elongated", "Formes (à venir)"};
         JComboBox<String> boite = new JComboBox<>(choix);
         boite.setSelectedIndex(0);
         panel.add(boite);

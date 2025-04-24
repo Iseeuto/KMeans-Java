@@ -2,6 +2,8 @@ package Formes;
 
 import Kmeans.Groupe;
 
+import java.util.Random;
+
 /**
  * Classe représentant un point dans un espace à deux dimensions.
  * Cette classe permet de créer des objets représentant des points avec des coordonnées x et y, ainsi qu'un groupe associé.
@@ -9,9 +11,11 @@ import Kmeans.Groupe;
  */
 public class Point {
 
+    // Coordonnées x et y du point
     private float x;
     private float y;
 
+    // Groupe d'appartenance du point
     public Groupe groupe;
 
     /**
@@ -29,7 +33,7 @@ public class Point {
 
     /**
      * Constructeur par défaut de la classe Point.
-     * Ce constructeur initialise un point avec les coordonnées (0, 0) et le groupe à -1 par défaut.
+     * Ce constructeur initialise un point avec des coordonnées aléatoires et le groupe à null par défaut.
      */
     Point(){
         this.x = 0;

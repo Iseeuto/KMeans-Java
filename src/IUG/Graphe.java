@@ -65,7 +65,13 @@ public class Graphe<K extends KMean<?>> extends JPanel {
             if(!this.Kmean.seuilAtteint){
                 this.Kmean.calculer();
                 this.etapeActuelle++;
-                this.Etapes.put(this.etapeActuelle, (HashSet<Point>) this.Kmean.centres.clone());
+                HashSet<Point> copieCentres = new HashSet<>();
+                for (Point p : (HashSet<Point>) this.Kmean.centres) {
+                    Point _p = new Point(p.getX(), p.getY());
+                    _p.groupe = p.getGroupe();
+                    copieCentres.add(_p); // ou p.clone() si tu as un clone()
+                }
+                this.Etapes.put(this.etapeActuelle, copieCentres);
             }
         } else {
             this.etapeActuelle++;
@@ -76,7 +82,6 @@ public class Graphe<K extends KMean<?>> extends JPanel {
     public void precedent(){
         if(this.etapeActuelle > 0) this.etapeActuelle--;
         this.repaint();
-        return;
     }
 
     /**
@@ -135,11 +140,13 @@ public class Graphe<K extends KMean<?>> extends JPanel {
             }
             dist *= 2;
 
-
             g.setColor(groupe.couleur);
             g.fillOval(posX-taillePoint/2, posY-this.taillePoint/2, this.taillePoint*2, this.taillePoint*2);
             //g.drawOval(posX-Math.round(majeur/2), posY-Math.round(mineur/2), Math.round(majeur), Math.round(mineur));
             g.drawArc(posX-Math.round(dist/2), posY-Math.round(dist/2), Math.round(dist), Math.round(dist), 0,360);
+
+            g.setColor(new Color(groupe.couleur.getRed(), groupe.couleur.getGreen(), groupe.couleur.getBlue(), 20));
+            g.fillOval(posX-Math.round(dist/2), posY-Math.round(dist/2), Math.round(dist), Math.round(dist));
         }
     }
 
@@ -167,6 +174,9 @@ public class Graphe<K extends KMean<?>> extends JPanel {
             g.fillOval(posX-taillePoint/2, posY-this.taillePoint/2, this.taillePoint*2, this.taillePoint*2);
             g.drawOval(posX-Math.round(majeur/2), posY-Math.round(mineur/2), Math.round(majeur), Math.round(mineur));
             //g.drawArc(posX-Math.round(dist/2), posY-Math.round(dist/2), Math.round(dist), Math.round(dist), 0,360);
+
+            g.setColor(new Color(groupe.couleur.getRed(), groupe.couleur.getGreen(), groupe.couleur.getBlue(), 20));
+            g.fillOval(posX-Math.round(majeur/2), posY-Math.round(mineur/2), Math.round(majeur), Math.round(mineur));
         }
     }
 
@@ -185,7 +195,7 @@ public class Graphe<K extends KMean<?>> extends JPanel {
             if (p == this.hovered) {
                 g.setColor(Color.WHITE);
             } else {
-                if(p.getGroupe() == null) g.setColor(Color.WHITE);
+                if(p.getGroupe() == null || this.etapeActuelle == 0) g.setColor(Color.WHITE);
                 else g.setColor(p.getGroupe().couleur);
             }
 

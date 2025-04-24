@@ -9,6 +9,7 @@ package Formes;
  */
 public class Ellipse extends Forme {
 
+    // Attributs représentants les deux axes permettant la représentation de l'Ellipse
     private float AxeMajeur, AxeMineur;
 
     /**

@@ -8,7 +8,7 @@ package Formes;
  * @see Forme
  */
 public class Cercle extends Forme {
-
+    //  Rayon du cercle
     private float rayon;
 
     /**
