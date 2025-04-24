@@ -1,5 +1,7 @@
 package Kmeans;
 
+import Exceptions.IdenticalElementsException;
+import Exceptions.MaxIterationException;
 import Formes.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,6 +31,9 @@ public abstract class KMean<T> {
     // Seuil de convergence, utilisé pour arrêter l'algorithme lorsque les centres ne changent plus beaucoup
     static float SEUIL_CONVERGENCE = 0.5f;
     public boolean seuilAtteint;
+
+    // Nombre maximum d'itérations lors de la mise à jour des centres
+    public final int MAX_ITERATION = 500;
 
     /**
      * Calcule la distance entre deux points. Cette méthode est abstraite et doit être implémentée 
@@ -61,7 +66,7 @@ public abstract class KMean<T> {
      * 
      * @return true si les centres ont changé, false sinon.
      */
-    protected abstract boolean MAJCentres();
+    protected abstract boolean MAJCentres() throws MaxIterationException;
 
     /**
      * Calcule une étape de l'algorithme K-means. Cette méthode gère l'attribution des points aux groupes
@@ -77,17 +82,19 @@ public abstract class KMean<T> {
      * @param k Le nombre de clusters.
      * @param elements L'ensemble des éléments à regrouper.
      */
-    KMean(int k, ArrayList<T> elements) {
+    KMean(int k, ArrayList<T> elements) throws IdenticalElementsException {
         // Gestion Erreur (nombre de groupe > nombre d'éléments)
-        if(k > elements.size()){ throw new IllegalArgumentException("Le nombre de groupe ne peut pas être supérieur au nombre d'éléments"); }
+        if(k > elements.size()){ throw new IdenticalElementsException(); }
         this.k = k;
         this.elts = elements;
 
         // Gestion Erreur (trop d'éléments identiques)
-        Iterator<T> it = elts.iterator();
-        HashSet<T> l = new HashSet<>();
-        while(it.hasNext()) l.add(it.next());
-        if(l.size() < k) throw new IllegalArgumentException("Trop d'éléments identiques");
+        if(k >= 2) {
+            Iterator<T> it = elts.iterator();
+            HashSet<T> l = new HashSet<>();
+            while (it.hasNext()) l.add(it.next());
+            if (l.size() < k) throw new IdenticalElementsException();
+        }
 
         this.centres = new HashSet<>();
         groupes = new ArrayList<>(k);

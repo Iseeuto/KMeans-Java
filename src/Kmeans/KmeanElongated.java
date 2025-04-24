@@ -1,5 +1,7 @@
 package Kmeans;
 
+import Exceptions.IdenticalElementsException;
+import Exceptions.MaxIterationException;
 import Formes.Point;
 
 import java.sql.Array;
@@ -99,7 +101,9 @@ public class KmeanElongated extends KMeanSimple{
     public void calculer(){
         if(!this.seuilAtteint){
             MAJGroupes();
-            this.seuilAtteint = !MAJCentres();
+            try {
+                this.seuilAtteint = !MAJCentres();
+            } catch (MaxIterationException e){ System.out.println(e); }
         }
     }
 
@@ -109,7 +113,7 @@ public class KmeanElongated extends KMeanSimple{
      * @param k Le nombre de clusters à créer
      * @param elements L'ensemble de points à regrouper
      */
-    public KmeanElongated(int k,ArrayList<Point> elements){
+    public KmeanElongated(int k,ArrayList<Point> elements) throws IdenticalElementsException {
         super(k,elements);
         this.stats = new HashMap<>();
         InitGroupes();
@@ -120,7 +124,7 @@ public class KmeanElongated extends KMeanSimple{
     /**
      * Constructeur par défaut du KmeanElongated sans paramètre
      */
-    public KmeanElongated(){
+    public KmeanElongated() throws IdenticalElementsException {
         super();
         this.stats = new HashMap<>();
         InitGroupes();
@@ -139,7 +143,11 @@ public class KmeanElongated extends KMeanSimple{
         points.add(new Point(10, 9));
 
         // Création d'une instance de KmeanElongated avec 2 clusters
-        KmeanElongated kmeans = new KmeanElongated(2, points);
+        KmeanElongated kmeans;
+
+        try{
+            kmeans = new KmeanElongated(2, points);
+        } catch (IdenticalElementsException e) { throw new RuntimeException(e); }
         
         // Initialisation des groupes
         kmeans.InitGroupes();

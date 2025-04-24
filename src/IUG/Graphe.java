@@ -137,7 +137,7 @@ public class Graphe<K extends KMean<?>> extends JPanel {
 
 
             g.setColor(groupe.couleur);
-            //g.fillOval(posX-taillePoint/2, posY-this.taillePoint, this.taillePoint, this.taillePoint);
+            g.fillOval(posX-taillePoint/2, posY-this.taillePoint/2, this.taillePoint*2, this.taillePoint*2);
             //g.drawOval(posX-Math.round(majeur/2), posY-Math.round(mineur/2), Math.round(majeur), Math.round(mineur));
             g.drawArc(posX-Math.round(dist/2), posY-Math.round(dist/2), Math.round(dist), Math.round(dist), 0,360);
         }
@@ -164,7 +164,7 @@ public class Graphe<K extends KMean<?>> extends JPanel {
             majeur *= 2; mineur *= 2;
 
             g.setColor(groupe.couleur);
-            //g.fillOval(posX-taillePoint/2, posY-this.taillePoint, this.taillePoint, this.taillePoint);
+            g.fillOval(posX-taillePoint/2, posY-this.taillePoint/2, this.taillePoint*2, this.taillePoint*2);
             g.drawOval(posX-Math.round(majeur/2), posY-Math.round(mineur/2), Math.round(majeur), Math.round(mineur));
             //g.drawArc(posX-Math.round(dist/2), posY-Math.round(dist/2), Math.round(dist), Math.round(dist), 0,360);
         }

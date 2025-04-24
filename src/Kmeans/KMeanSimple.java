@@ -1,6 +1,9 @@
 package Kmeans;
 
+import Exceptions.IdenticalElementsException;
+import Exceptions.MaxIterationException;
 import Formes.Point;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -85,9 +88,14 @@ public class KMeanSimple extends KMean<Point>{
      * @return true si les centres ont bougé, false si la convergence est atteinte
      */
     @Override
-    protected boolean MAJCentres(){
+    protected boolean MAJCentres() throws MaxIterationException {
         boolean continuer = false;
+        int iterations = 0;
         for (Point centre : centres) {
+            // Erreur si le nombre maximum d'itérations est atteint
+            iterations++;
+            if(iterations > MAX_ITERATION) throw new MaxIterationException();
+
             ArrayList<Point> liste = centre.getGroupe().points;
             float taille = liste.size();
             float newX = 0;
@@ -123,7 +131,9 @@ public class KMeanSimple extends KMean<Point>{
     public void calculer(){
         if(!this.seuilAtteint){
             MAJGroupes();
-            this.seuilAtteint = !MAJCentres();
+            try {
+                this.seuilAtteint = !MAJCentres();
+            } catch (MaxIterationException e){ System.out.println(e); }
         }
     }
 
@@ -133,14 +143,14 @@ public class KMeanSimple extends KMean<Point>{
      * @param k Le nombre de clusters à créer
      * @param elements L'ensemble de points à regrouper
      */
-    public KMeanSimple(int k, ArrayList<Point> elements){
+    public KMeanSimple(int k, ArrayList<Point> elements) throws IdenticalElementsException {
         super(k, elements);
     }
 
     /**
      * Constructeur par défaut qui initialise k à 2 et crée un ensemble vide de points.
      */
-    public KMeanSimple(){
+    public KMeanSimple() throws IdenticalElementsException {
         super(2, new ArrayList<>());
     }
 
@@ -150,28 +160,25 @@ public class KMeanSimple extends KMean<Point>{
      * @param args Arguments de la ligne de commande (non utilisés)
      */
     public static void main(String[] args) {
-        Point a = new Point(1, 1);
         Point b = new Point(2, 2);
-        Point c = new Point(3, 3);
-        Point d = new Point(4, 4);
-        Point e = new Point(5, 6);
-        Point f = new Point(8, 5);
-        Point g = new Point(9, 8);
-        Point h = new Point(10, 7);
+        Point c = new Point(2, 2);
+        Point d = new Point(2, 2);
+        Point e = new Point(2, 2);
+        Point f = new Point(2, 2);
 
         ArrayList<Point> elts = new ArrayList<>();
 
-        elts.add(a);
         elts.add(b);
         elts.add(c);
         elts.add(d);
         elts.add(e);
         elts.add(f);
-        elts.add(g);
-        elts.add(h);
 
-        //Test pour la mise à jour des groupes
-        KMeanSimple test = new KMeanSimple(3, elts);
+        KMeanSimple test;
+
+        try {
+            test = new KMeanSimple(1, elts);
+        } catch (IdenticalElementsException exception){ System.out.println(exception); return; }
 
         System.out.println("Liste des centres :");
         for(Point p:test.centres){
@@ -184,7 +191,12 @@ public class KMeanSimple extends KMean<Point>{
         int i =0;
         for(Groupe gr: test.groupes) System.out.println("GROUPE " + i++ + ": " + gr);
 
-        KMeanSimple test1 = new KMeanSimple(7, elts);
+        KMeanSimple test1;
+
+        try {
+            test1 = new KMeanSimple(3, elts);
+        } catch(IdenticalElementsException exception){ throw new RuntimeException(exception); }
+
         test1.executerKMeans();
 
         System.out.println("Liste des centres :");
@@ -205,7 +217,11 @@ public class KMeanSimple extends KMean<Point>{
 
             // Test avec k supérieur au nombre de points (ici, k = 5 alors qu'il n'y a que 3 points)
             int k = 5;
-            KMeanSimple kmeans = new KMeanSimple(k, points);
+            KMeanSimple kmeans;
+
+            try {
+                kmeans = new KMeanSimple(k, points);
+            } catch(IdenticalElementsException exception){ throw new RuntimeException(exception); }
 
         } catch (IllegalArgumentException exp) {
             System.out.println("\nException attrapée : " + exp.getMessage());

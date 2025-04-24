@@ -1,18 +1,14 @@
 package IUG;
 
-import Formes.Point;
-import Kmeans.KMean;
+import Exceptions.IdenticalElementsException;
 import Kmeans.KMeanSimple;
 import Kmeans.KmeanElongated;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Scanner;
 /**
  * Classe représentant une fenêtre permettant d'importer des fichiers de données.
@@ -46,7 +42,6 @@ public class FenetreImport extends JFrame {
         String[] labels = lines.get(0).split(";");
         ArrayList<Formes.Point> points = new ArrayList<>();
         for (int i = 1; i < lines.size(); i++) {
-            // TODO: faire pour n dimensions
             String[] s = lines.get(i).split(";");
             Formes.Point p = new Formes.Point(
                     Float.parseFloat(s[0].replace(',', '.')),
@@ -56,16 +51,18 @@ public class FenetreImport extends JFrame {
         }
 
         Graphe<?> graph = null;
-        switch (type) {
-            case "Simple":
-                graph = new Graphe<>(new KMeanSimple(nbCentres, points));
-                break;
-            case "Elongated":
-                graph = new Graphe<>(new KmeanElongated(nbCentres, points));
-                break;
-            case "Formes":
-                break;
-        }
+        try {
+            switch (type) {
+                case "Simple":
+                    graph = new Graphe<>(new KMeanSimple(nbCentres, points));
+                    break;
+                case "Elongated":
+                    graph = new Graphe<>(new KmeanElongated(nbCentres, points));
+                    break;
+                case "Formes":
+                    break;
+            }
+        } catch (IdenticalElementsException e){ throw new RuntimeException(e); }
 
         app.switchGraph(graph);
     }
@@ -114,7 +111,7 @@ public class FenetreImport extends JFrame {
         boite.setSelectedIndex(0);
         panel.add(boite);
 
-        SpinnerModel model = new SpinnerNumberModel(2, 2, 20, 1);
+        SpinnerModel model = new SpinnerNumberModel(2, 2, 100, 1);
         JSpinner spinner = new JSpinner(model);
         JComponent editor = spinner.getEditor();
         if (editor instanceof JSpinner.DefaultEditor) {
